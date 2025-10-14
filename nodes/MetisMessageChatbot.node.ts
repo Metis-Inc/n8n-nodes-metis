@@ -27,7 +27,7 @@ export class MetisMessageChatbot implements INodeType {
                 type: 'string',
                 required: true,
                 default: '',
-                placeholder: 'bot_abc123',
+                placeholder: 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx',
             },
             {
                 displayName: 'Session ID',
