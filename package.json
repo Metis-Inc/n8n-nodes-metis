@@ -1,0 +1,34 @@
+{
+  "name": "n8n-nodes-metis",
+  "version": "1.0.0",
+  "description": "Metis nodes for n8n: Create Generation & Message Chatbot",
+  "author": "Metis",
+  "license": "MIT",
+  "keywords": ["n8n-community-node", "metis", "ai"],
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && npm run copy:assets",
+    "copy:assets": "cpy metis.png dist/nodes/"
+  },
+  "n8n": {
+    "credentials": [
+      "dist/credentials/MetisApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/MetisCreateGeneration.node.js",
+      "dist/nodes/MetisMessageChatbot.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "n8n-node-dev": "^1.114.0",
+    "typescript": "^5.9.3",
+    "cpy-cli": "^5.0.0"
+  },
+  "dependencies": {
+    "jsonschema": "^1.5.0",
+    "n8n-workflow": "^1.46.0"
+  }
+}
