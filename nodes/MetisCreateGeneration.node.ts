@@ -9,7 +9,7 @@ import type {
 } from 'n8n-workflow';
 import { NodeOperationError } from 'n8n-workflow';
 import { metisRequest, sleep } from '../helpers/transport';
-import { flattenGenerationProviders, parseProviderValue, buildArgsFromGuided, buildArgsFromSchemaGroups } from '../helpers/utils';
+import { flattenGenerationProviders, parseProviderValue, buildArgsFromSchemaGroups } from '../helpers/utils';
 
 type LoadOption = { name: string; value: string };
 
@@ -111,7 +111,6 @@ export class MetisCreateGeneration implements INodeType {
                 type: 'options',
                 options: [
                     { name: 'Schema', value: 'schema' },
-                    { name: 'Guided (Generic)', value: 'guided' },
                     { name: 'JSON', value: 'json' },
                 ],
                 default: 'schema',
@@ -285,79 +284,6 @@ export class MetisCreateGeneration implements INodeType {
                 ],
             },
 
-            {
-                displayName: 'Guided Args',
-                name: 'guided',
-                type: 'fixedCollection',
-                typeOptions: { multipleValues: true },
-                default: {},
-                displayOptions: { show: { argsMode: ['guided'] } },
-                options: [
-                    {
-                        name: 'strings',
-                        displayName: 'String Fields',
-                        values: [
-                            { displayName: 'Name', name: 'name', type: 'string', default: '' },
-                            { displayName: 'Value', name: 'value', type: 'string', default: '' },
-                        ],
-                    },
-                    {
-                        name: 'integers',
-                        displayName: 'Integer Fields',
-                        values: [
-                            { displayName: 'Name', name: 'name', type: 'string', default: '' },
-                            { displayName: 'Value', name: 'value', type: 'number', default: 0 },
-                        ],
-                    },
-                    {
-                        name: 'floats',
-                        displayName: 'Float Fields',
-                        values: [
-                            { displayName: 'Name', name: 'name', type: 'string', default: '' },
-                            { displayName: 'Value', name: 'value', type: 'number', default: 0 },
-                        ],
-                    },
-                    {
-                        name: 'booleans',
-                        displayName: 'Boolean Fields',
-                        values: [
-                            { displayName: 'Name', name: 'name', type: 'string', default: '' },
-                            { displayName: 'Value', name: 'value', type: 'boolean', default: false },
-                        ],
-                    },
-                    {
-                        name: 'links',
-                        displayName: 'Link Fields (URL strings)',
-                        values: [
-                            { displayName: 'Name', name: 'name', type: 'string', default: '' },
-                            { displayName: 'Value', name: 'value', type: 'string', default: 'https://' },
-                        ],
-                    },
-                    {
-                        name: 'objects',
-                        displayName: 'Object Fields (JSON)',
-                        values: [
-                            { displayName: 'Name', name: 'name', type: 'string', default: '' },
-                            { displayName: 'Value (JSON)', name: 'value', type: 'string', typeOptions: { rows: 4 }, default: '{}' },
-                        ],
-                    },
-                    {
-                        name: 'arrays',
-                        displayName: 'Array Fields (JSON)',
-                        values: [
-                            { displayName: 'Name', name: 'name', type: 'string', default: '' },
-                            { displayName: 'Value (JSON Array)', name: 'value', type: 'string', typeOptions: { rows: 3 }, default: '[]' },
-                        ],
-                    },
-                    {
-                        name: 'additionalArgsJson',
-                        displayName: 'Additional Args (JSON, merged)',
-                        values: [
-                            { displayName: 'JSON', name: 'additionalArgsJson', type: 'string', typeOptions: { rows: 5 }, default: '' },
-                        ],
-                    },
-                ],
-            },
 
             {
                 displayName: 'Args (JSON)',
@@ -538,16 +464,13 @@ export class MetisCreateGeneration implements INodeType {
             try {
                 const providerModel = this.getNodeParameter('providerModel', i) as string;
                 const operation = this.getNodeParameter('operation', i) as string;
-                const argsMode = this.getNodeParameter('argsMode', i) as 'schema' | 'guided' | 'json';
+                const argsMode = this.getNodeParameter('argsMode', i) as 'schema' | 'json';
                 const { name: providerName, model: providerModelName } = parseProviderValue(providerModel);
 
                 let args: Record<string, any> = {};
                 if (argsMode === 'json') {
                     const raw = this.getNodeParameter('argsJson', i) as string;
                     try { args = raw ? JSON.parse(raw) : {}; } catch { throw new NodeOperationError(this.getNode(), 'Invalid JSON in Args (JSON)'); }
-                } else if (argsMode === 'guided') {
-                    const guided = this.getNodeParameter('guided', i, {}) as IDataObject;
-                    args = buildArgsFromGuided(guided);
                 } else {
                     const schemaArgs = this.getNodeParameter('schemaArgs', i, {}) as IDataObject;
                     args = buildArgsFromSchemaGroups(schemaArgs);

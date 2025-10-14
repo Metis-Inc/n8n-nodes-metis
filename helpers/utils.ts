@@ -16,35 +16,6 @@ export function parseProviderValue(value: string): { name: string; model: string
     return { name, model };
 }
 
-export function buildArgsFromGuided(guided: any): Record<string, any> {
-    const out: Record<string, any> = {};
-    function put(entries: Array<{ name: string; value: any }>, transform?: (v: any) => any) {
-        for (const e of entries || []) {
-            if (!e?.name) continue;
-            out[e.name] = transform ? transform(e.value) : e.value;
-        }
-    }
-    put(guided?.strings, (v) => String(v));
-    put(guided?.integers, (v) => (v === '' || v === undefined ? undefined : Number.parseInt(String(v), 10)));
-    put(guided?.floats, (v) => (v === '' || v === undefined ? undefined : Number.parseFloat(String(v))));
-    put(guided?.booleans, (v) => (v === true || v === 'true' ? true : v === false || v === 'false' ? false : v));
-    put(guided?.links, (v) => String(v));
-    function parseJSONMaybe(v: any) {
-        if (typeof v !== 'string') return v;
-        try { return JSON.parse(v); } catch { return v; }
-    }
-    put(guided?.objects, parseJSONMaybe);
-    put(guided?.arrays, parseJSONMaybe);
-    if (guided?.additionalArgsJson) {
-        try {
-            const extra = JSON.parse(guided.additionalArgsJson);
-            if (extra && typeof extra === 'object') Object.assign(out, extra);
-        } catch {}
-    }
-    for (const k of Object.keys(out)) if (out[k] === undefined) delete out[k];
-    return out;
-}
-
 export function buildArgsFromSchemaGroups(schemaArgs: any): Record<string, any> {
     const out: Record<string, any> = {};
     function put(entries: Array<{ name: string; value: any }>, transform?: (v: any) => any) {
