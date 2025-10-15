@@ -9,7 +9,12 @@
     "url": "https://github.com/Metis-Inc/n8n-nodes-metis.git"
   },
   "homepage": "https://github.com/Metis-Inc/n8n-nodes-metis#readme",
-  "keywords": ["n8n-community-node-package","metis","n8n","ai"],
+  "keywords": [
+    "n8n-community-node-package",
+    "metis",
+    "n8n",
+    "ai"
+  ],
   "files": [
     "dist"
   ],
@@ -28,12 +33,11 @@
   },
   "devDependencies": {
     "@types/node": "^24.7.2",
+    "cpy-cli": "^5.0.0",
     "n8n-node-dev": "^1.114.0",
-    "typescript": "^5.9.3",
-    "cpy-cli": "^5.0.0"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "jsonschema": "^1.5.0",
     "n8n-workflow": "^1.46.0"
   }
 }
