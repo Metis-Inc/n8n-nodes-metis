@@ -4,7 +4,7 @@
   "description": "Metis nodes for n8n: Create Generation & Message Chatbot",
   "author": "Metis",
   "license": "MIT",
-  "keywords": ["n8n-community-node", "metis", "ai"],
+  "keywords": ["n8n-community-node", "metis", "ai", "n8n-community-node-package"],
   "files": [
     "dist"
   ],
