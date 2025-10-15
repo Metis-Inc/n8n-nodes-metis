@@ -16,11 +16,14 @@
     "ai"
   ],
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json && npm run copy:assets",
-    "copy:assets": "cpy metis.png dist/nodes/"
+    "copy:assets": "cpy metis.png dist/nodes/",
+    "prepack": "npm run build"
   },
   "n8n": {
     "credentials": [
